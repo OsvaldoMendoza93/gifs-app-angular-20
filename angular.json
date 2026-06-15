@@ -2,11 +2,12 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
-    "gifs-app-angular20": {
+    "gifs-app-angular-20": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -65,10 +66,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gifs-app-angular20:build:production"
+              "buildTarget": "gifs-app-angular-20:build:production"
             },
             "development": {
-              "buildTarget": "gifs-app-angular20:build:development"
+              "buildTarget": "gifs-app-angular-20:build:development"
             }
           },
           "defaultConfiguration": "development"
