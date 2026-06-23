@@ -1,1 +1,8 @@
-<gifs-list [gifs]="imageUrls()" />
+<section class="py-5">
+    @defer (when !isLoading()) {
+    <gifs-list [gifs]="gifs()" />
+    }
+    @placeholder {
+    <h1>loandig</h1>
+    }
+</section>
