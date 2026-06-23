@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { GifsService } from '../../../services/gifs.service';
 
 interface MenuOption {
   icon: string
@@ -15,6 +16,10 @@ interface MenuOption {
   styleUrl: './side-menu-options.scss',
 })
 export class SideMenuOptions {
+  gifsService = inject(GifsService);
+
+  searchKeys = computed(() => this.gifsService.searchHistoryKey());
+
   menuOptions = signal<MenuOption[]>([
     {
       icon: 'fa-solid fa-chart-line',
