@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 import { environment } from '@environments/environment';
 
@@ -16,7 +16,17 @@ export class GifsService {
     GIF_KEY: string = 'gifs'
 
     trendingGifs = signal<Gif[]>([]);
-    trendingGifsLoading = signal<boolean>(true);
+    trendingGifsLoading = signal<boolean>(false);
+    private trendingPage = signal<number>(0);
+
+    trendingGifsGroup = computed<Gif[][]>(() => {
+        const groups = [];
+        for (let i = 0; i < this.trendingGifs().length; i += 3) {
+            groups.push(this.trendingGifs().slice(i, i + 3));
+
+        }
+        return groups;
+    });
 
     searchHistory = signal<Record<string, Gif[]>>(this.loadFormLocalStorage());
     searchHistoryKey = computed(() => Object.keys(this.searchHistory()));
@@ -35,15 +45,24 @@ export class GifsService {
     }
 
     loadTrendingGifs() {
+        if (this.trendingGifsLoading()) return of([]);
+
+        this.trendingGifsLoading.set(true);
+
         return this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
             params: {
                 api_key: environment.giphyApiKey,
-                limit: 20
+                limit: 20,
+                offset: this.trendingPage() * 20,
             }
         }).pipe(
             map((resp) => GifMapper.mapGiphyItemsToGifArray(resp.data)),
             tap((gifs) => {
-                this.trendingGifs.set(gifs);
+                this.trendingGifs.update(currentGifs => [
+                    ...currentGifs,
+                    ...gifs
+                ]);
+                this.trendingPage.update(currentPage => currentPage + 1);
                 this.trendingGifsLoading.set(false);
             })
         );
