@@ -4,14 +4,11 @@ pipeline {
 
     stages {
 
-        stage('Hello Jenkins') {
-
+        stage('Checkout') {
             steps {
-
-                echo 'Mi primer Pipeline'
-
+                checkout scm
+                sh 'ls -la'
             }
-
         }
 
     }
