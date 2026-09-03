@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
@@ -15,6 +19,15 @@ pipeline {
             steps {
                 sh 'npm ci'
             }
+        }
+
+    }
+    post {
+
+        success {
+
+            echo 'Todo salió bien'
+
         }
 
     }
