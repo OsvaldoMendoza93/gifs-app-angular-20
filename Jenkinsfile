@@ -16,7 +16,12 @@ pipeline {
                 sh 'npm ci'
             }
         }
-
+        stage('Build Angular'){
+            step{
+                sh 'npm run build'
+                sh 'ls -la dist'
+            }
+        }
     }
 
 }
